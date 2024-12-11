@@ -31,3 +31,4 @@ export const sequelize = process.env.DATABASE_URL
             } : {},
         }
     );
+    
