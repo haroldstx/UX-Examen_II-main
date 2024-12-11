@@ -1,11 +1,29 @@
-import {React,useState} from 'react';
+import React, { useState, useEffect } from "react";
+import RestaurantCard from "./Restaurants_Cards";
+function Restaurants() {
+    const [restaurants, setRestaurants] = useState([]);
 
-function Resturants_Cards() {
+    useEffect(() => {
+        fetch("/restaurants")
+            .then(response => response.json())
+            .then(data => setRestaurants(data))
+            .catch(error => console.error("Error fetching restaurants:", error));
+    }, []);
+
     return (
         <div>
-            <h1> Welcome to my Resturants</h1>
+            <h1>Welcome to my Restaurantes</h1>
+            
+            {restaurants.map((restaurant, index) => (
+                <RestaurantCard key={index} restaurant={restaurant} />
+            ))}
+            <ul>
+                {restaurants.map((restaurant, index) => (
+                    <li key={index}>{restaurant.name}</li>
+                ))}
+            </ul>
         </div>
     );
 }
 
-export default Resturants_Cards;
+export default Restaurants;
