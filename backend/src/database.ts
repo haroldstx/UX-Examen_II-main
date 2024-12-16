@@ -79,10 +79,11 @@ interface RestaurantAttributes {
     idHabilitado: number;
     id: number;
     scheduleTime: Date;
-    reserved: TinyIntegerDataType;
+    reserved: boolean;
     reservedBy: string;
   }
   
+  // Modelo de RestaurantHabilitado
   export const RestaurantHabilitado = sequelize.define<Model<RestaurantHbailitadoAttributes, RestaurantHbailitadoAttributes>>('RestaurantHabilitado', {
     idHabilitado: {
         type: DataTypes.INTEGER,
@@ -91,21 +92,23 @@ interface RestaurantAttributes {
         },
     id: {
       type: DataTypes.INTEGER,
+      allowNull: false,
     },
     scheduleTime: {
       type: DataTypes.DATE,
       allowNull: false,
     },
     reserved: {
-      type: DataTypes.TINYINT,
+      type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
     reservedBy: {
       type: DataTypes.STRING,
-      allowNull: true,
     },
   }); 
     //Relaciones
     Restaurant.hasOne(RestaurantHabilitado, { foreignKey: 'id' });
     RestaurantHabilitado.belongsTo(Restaurant, { foreignKey: 'id' });
+
+    export {Sequelize};
 

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import './App.css';
-import Resturants from './Resturants'; // Cambiado a Resturants
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Resturants from './Resturants'; 
 
 function App() {
     return (
         <div className="App">
-            <Resturants /> 
+            <Resturants />
         </div>       
     );
 }
-
 export default App;

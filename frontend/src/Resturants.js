@@ -1,63 +1,45 @@
-// Importar las dependencias necesarias
 import React, { useEffect, useState } from 'react';
-import { createSlice, configureStore } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { Card, Button, Container, Row, Col } from 'react-bootstrap';
+import RestaurantCard from './RestaurantsCards';
 
-// Slice de Redux para restaurantes
-const restaurantsSlice = createSlice({
-    name: 'restaurants',
-    initialState: [],
-    reducers: {
-      setRestaurants: (state, action) => action.payload,
-    },
-  });
-  
-  const { setRestaurants } = restaurantsSlice.actions;
-  const store = configureStore({
-    reducer: {
-      restaurants: restaurantsSlice.reducer,
-    },
-  });
-  
 
 // Crear el componente Restaurants
 const Restaurants = () => {
-  // Estado para almacenar la lista de restaurantes
   const [restaurants, setRestaurants] = useState([]);
-
-  // Estado para manejar posibles errores
   const [error, setError] = useState(null);
 
-  // useEffect para hacer la petición al endpoint
+  // useEffect para obtener la lista de restaurantes
   useEffect(() => {
     const fetchRestaurants = async () => {
       try {
-        // Hacer la petición al endpoint
-        const response = await axios.get('/restaurants');
-        // Actualizar el estado con los datos recibidos
+        const response = await axios.get('http://localhost:8000/restaurants');
         setRestaurants(response.data);
+        if (response.data.length === 0) {
+          setError('No hay restaurantes en la ruta');
+        }
       } catch (err) {
-        // Manejar errores
         setError('Error al cargar los restaurantes.');
       }
     };
-
     fetchRestaurants();
-  }, []); // El array vacío asegura que solo se ejecute al montar el componente
+  }, []);
 
   return (
-    <div>
-      <h1>Lista de Restaurantes</h1>
-      {error && <p style={{ color: 'red' }}>{error}</p>} {/* Mostrar error si existe */}
-      <ul>
-        {/* Usar .map() para renderizar la lista de restaurantes */}
+    <Container>
+      <h1 className="text-center my-4">Lista de Restaurantes</h1>
+      {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+      <Row>
         {restaurants.map((restaurant) => (
-          <li key={restaurant.id}>{restaurant.name}</li>
+          restaurant && (
+            <Col key={restaurant.id} sm={12} md={6} lg={4} className="mb-4">
+              <RestaurantCard restaurant={restaurant} />
+            </Col>
+          )
         ))}
-      </ul>
-    </div>
+      </Row>
+    </Container>
   );
 };
-
 // Exportar el componente
 export default Restaurants;
