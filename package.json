@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.1.5",
+    "@reduxjs/toolkit": "^2.5.0",
     "al": "^0.0.3",
     "all": "^0.0.0",
     "axios": "^1.7.7",
