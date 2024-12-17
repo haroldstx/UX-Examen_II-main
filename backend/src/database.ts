@@ -77,7 +77,7 @@ interface RestaurantAttributes {
   //Modulo de Restaurant-Habilitado
   interface RestaurantHbailitadoAttributes {
     idHabilitado: number;
-    id: number;
+    restaurantId: number;
     scheduleTime: Date;
     reserved: boolean;
     reservedBy: string;
@@ -90,9 +90,15 @@ interface RestaurantAttributes {
         autoIncrement: true,
         primaryKey: true,
         },
-    id: {
+      restaurantId: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: Restaurant,
+        key: 'id',
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
     },
     scheduleTime: {
       type: DataTypes.DATE,
@@ -104,11 +110,12 @@ interface RestaurantAttributes {
     },
     reservedBy: {
       type: DataTypes.STRING,
+      allowNull: true,
     },
   }); 
     //Relaciones
-    Restaurant.hasOne(RestaurantHabilitado, { foreignKey: 'id' });
-    RestaurantHabilitado.belongsTo(Restaurant, { foreignKey: 'id' });
+    Restaurant.hasMany(RestaurantHabilitado, { foreignKey: 'restaurantId' });
+    RestaurantHabilitado.belongsTo(Restaurant, { foreignKey: 'Id' });
 
     export {Sequelize};
 

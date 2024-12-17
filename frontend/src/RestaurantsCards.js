@@ -4,9 +4,9 @@ import { Card, Button, Form } from 'react-bootstrap';
 
 const RestaurantCard = ({ restaurant }) => {
   const [showAvailability, setShowAvailability] = useState(false);
-  const [availability, setAvailability] = useState([]); // Guarda los registros de horarios disponibles
-  const [selectedTime, setSelectedTime] = useState(null); // Almacena la fecha seleccionada
-  const [userName, setUserName] = useState(''); // Almacena el nombre del usuario
+  const [availability, setAvailability] = useState([]); // Horarios disponibles
+  const [selectedTime, setSelectedTime] = useState(null); // Fecha seleccionada
+  const [userName, setUserName] = useState(''); // Nombre del usuario
 
   // Función para obtener los horarios disponibles
   const fetchAvailability = async () => {
@@ -14,7 +14,7 @@ const RestaurantCard = ({ restaurant }) => {
       const response = await axios.get(
         `http://localhost:8000/restaurants/availability/${restaurant.id}`
       );
-      setAvailability(response.data); 
+      setAvailability(response.data);
       setShowAvailability(true);
     } catch (error) {
       console.error('Error al cargar la disponibilidad:', error);
@@ -25,15 +25,18 @@ const RestaurantCard = ({ restaurant }) => {
   // Función para reservar un horario
   const handleReserve = async () => {
     try {
+      const normalizedTime = new Date(selectedTime).toISOString();
+  
       await axios.post('http://localhost:8000/restaurants/reserve', {
-        restaurantId: restaurant.id,
-        scheduleTime: selectedTime,
+        restaurantId: restaurant.id, // Corregido: Se envía restaurantId
+        scheduleTime: normalizedTime,
         reservedBy: userName,
       });
-      alert(`Reserva exitosa para ${userName} a las ${selectedTime}`);
+  
+      alert(`Reserva exitosa para ${userName} a las ${new Date(normalizedTime).toLocaleString()}`);
       setShowAvailability(false);
     } catch (error) {
-      console.error('Error al realizar la reserva:', error);
+      console.error('Error al realizar la reservación:', error.response?.data || error.message);
       alert('Error al realizar la reserva.');
     }
   };
@@ -67,18 +70,17 @@ const RestaurantCard = ({ restaurant }) => {
                     type="text"
                     placeholder="Ingresa tu nombre"
                     value={userName}
-                    onChange={(e) => setUserName(e.target.value)} 
+                    onChange={(e) => setUserName(e.target.value)}
                   />
                 </Form.Group>
                 <Button
                   className="mt-2"
                   variant="success"
                   onClick={handleReserve}
-                  disabled={!selectedTime || !userName} 
+                  disabled={!selectedTime || !userName}
                 >
                   Reservar
                 </Button>
-                
               </Form>
             ) : (
               <p>No hay horarios disponibles.</p>

@@ -29,7 +29,7 @@ router.get('/availability/:id', async (req, res) => {
       // Calcula el inicio del año actual
       const availableRestaurants = await RestaurantHabilitado.findAll({
         where: {
-          id: id, 
+          restaurantId: id, 
           reserved: false, 
         },
       });
@@ -58,11 +58,12 @@ router.get('/availability/:id', async (req, res) => {
   
       const restaurantHabilitado = await RestaurantHabilitado.findOne({
         where: {
-          idHabilitado: restaurantId,
-          scheduleTime: scheduleTime,
+          restaurantId: restaurantId,
+          scheduleTime: new Date(scheduleTime), 
           reserved: false,
         },
       });
+      
   
       if (!restaurantHabilitado) {
         return res.status(404).json({
